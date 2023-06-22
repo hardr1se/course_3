@@ -2,7 +2,6 @@ package ru.hogwarts.service;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.model.Faculty;
-import ru.hogwarts.model.Student;
 import ru.hogwarts.repository.FacultyRepository;
 
 import java.util.Collection;
@@ -36,7 +35,7 @@ public class FacultyService {
         return facultyRepository.getAllByNameIgnoreCase(name);
     }
 
-    public Faculty getFacultiesByFaculty_IdOfStudent(Long facultyId) {
+    public Faculty getFacultyById(Long facultyId) {
         return facultyRepository.getFacultyById(facultyId);
     }
 

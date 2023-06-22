@@ -7,7 +7,6 @@ import ru.hogwarts.model.Student;
 import ru.hogwarts.service.FacultyService;
 
 import java.util.Collection;
-import java.util.Collections;
 
 @RestController
 @RequestMapping("faculty")
@@ -35,15 +34,18 @@ public class FacultyController {
     @GetMapping
     public Collection<Faculty> getFacultiesByColour(@RequestParam(required = false) String colour,
                                                     @RequestParam(required = false) String name,
-                                                    @RequestParam(required = false) Long faculty_id) {
+                                                    @RequestParam(required = false) Long id) {
         if (colour != null) {
             return facultyService.getFacultiesByColour(colour);
         } else if (name != null) {
             return facultyService.getFacultiesByName(name);
-        } else if (faculty_id != null) {
-            return Collections.singleton(facultyService.getFacultiesByFaculty_IdOfStudent(faculty_id));
         }
         return facultyService.getAllFaculties();
+    }
+
+    @GetMapping("student/{id}")
+    public Collection<Student> getFacultiesByColour(@PathVariable Long id) {
+        return facultyService.getFacultyById(id).getStudents();
     }
 
     @PutMapping

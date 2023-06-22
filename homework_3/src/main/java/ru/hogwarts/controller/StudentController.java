@@ -38,14 +38,16 @@ public class StudentController {
 
     @GetMapping
     public Collection<Student> findByAgeBetween(@RequestParam(required = false) Integer max,
-                                                @RequestParam(required = false) Integer min,
-                                                @RequestParam(required = false) Integer facultyId) {
+                                                @RequestParam(required = false) Integer min) {
         if (max != null && min != null) {
             return studentService.findByAgeBetween(min, max);
-        } else if (facultyId != null) {
-            return studentService.getStudentsByFaculty(facultyId);
         }
         return studentService.getAllStudents();
+    }
+
+    @GetMapping("faculty/{id}")
+    public Faculty findByAgeBetween(@PathVariable Integer id) {
+        return studentService.getStudentsByFaculty(id).getFaculty();
     }
 
     @PutMapping
