@@ -27,10 +27,16 @@ public class StudentService {
         return Collections.unmodifiableCollection(studentRepository.findAll());
     }
 
-    public Collection<Student> getStudentsByAge(Long age) {
-        return studentRepository.findAll().stream()
-                .filter(x -> x.getAge() == age)
-                .toList();
+    public Collection<Student> getStudentsByAge(int age) {
+        return studentRepository.getAllByAge(age);
+    }
+
+    public Collection<Student> getStudentsByFaculty(long facultyId) {
+        return studentRepository.findByFaculty_Id(facultyId);
+    }
+
+    public Collection<Student> findByAgeBetween(int min, int max) {
+        return studentRepository.findByAgeBetween(min, max);
     }
 
     public Student updateStudent(Student student) {
