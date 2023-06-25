@@ -1,9 +1,11 @@
 package ru.hogwarts.mapper;
 
+import org.springframework.stereotype.Component;
 import ru.hogwarts.dto.in.FacultyDtoIn;
 import ru.hogwarts.dto.out.FacultyDtoOut;
 import ru.hogwarts.model.Faculty;
 
+@Component
 public class FacultyMapper {
     public FacultyDtoOut toDto(Faculty faculty) {
         FacultyDtoOut facultyDtoOut = new FacultyDtoOut();

@@ -1,6 +1,7 @@
 package ru.hogwarts.mapper;
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.hogwarts.dto.in.StudentDtoIn;
 import ru.hogwarts.dto.out.StudentDtoOut;
 import ru.hogwarts.exceptions.FacultyNotFoundException;
@@ -10,6 +11,7 @@ import ru.hogwarts.repository.FacultyRepository;
 import java.util.Optional;
 
 @AllArgsConstructor
+@Component
 public class StudentMapper {
     private final FacultyMapper facultyMapper;
     private final FacultyRepository facultyRepository;
