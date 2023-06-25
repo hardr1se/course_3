@@ -1,8 +1,8 @@
 package ru.hogwarts.model;
 
-import jakarta.persistence.*;
 import lombok.*;
 
+import javax.persistence.*;
 import java.util.Collection;
 
 @Getter

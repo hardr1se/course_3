@@ -1,49 +1,77 @@
 package ru.hogwarts.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.dto.out.FacultyDtoOut;
+import ru.hogwarts.dto.in.StudentDtoIn;
+import ru.hogwarts.dto.out.StudentDtoOut;
+import ru.hogwarts.exceptions.StudentNotFoundException;
+import ru.hogwarts.mapper.StudentMapper;
 import ru.hogwarts.model.Student;
+import ru.hogwarts.repository.FacultyRepository;
 import ru.hogwarts.repository.StudentRepository;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class StudentService {
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+    private final StudentMapper studentMapper;
+    private final FacultyRepository facultyRepository;
 
-    public StudentService(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    public StudentDtoOut create(StudentDtoIn studentDtoIn) {
+        return studentMapper.toDto(studentRepository.save(studentMapper.toEntity(studentDtoIn)));
     }
 
-    public Student createStudent(Student student) {
-        return studentRepository.save(student);
+    public StudentDtoOut find(long id) {
+        return Optional.ofNullable(studentRepository.findById(id))
+                .map(studentMapper::toDto)
+                .orElseThrow(() -> new StudentNotFoundException(id));
     }
 
-    public Student findStudent(long id) {
-        return studentRepository.findById(id).get();
+    public Collection<StudentDtoOut> getAll() {
+        return studentRepository.findAll().stream()
+                .map(studentMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public Collection<Student> getAllStudents() {
-        return Collections.unmodifiableCollection(studentRepository.findAll());
+    public FacultyDtoOut findFacultyOfStudent(long studentId) {
+        return Optional.ofNullable(studentRepository.findById(studentId))
+                .map(studentMapper::toDto)
+                .orElseThrow(() -> new StudentNotFoundException(studentId))
+                .getFaculty();
     }
 
-    public Collection<Student> getStudentsByAge(int age) {
-        return studentRepository.getAllByAge(age);
+    public StudentDtoOut update(StudentDtoIn student) {
+        return studentRepository.findById(student.getId())
+                .map(old -> {
+                    old.setName(student.getName());
+                    old.setAge(student.getAge());
+                    old.setFaculty(facultyRepository.findById(student.getFacultyId()));
+                    return studentMapper.toDto(studentRepository.save(old));
+                })
+                .orElseThrow(() -> new StudentNotFoundException(student.getId()));
     }
 
-    public Student getStudentsByFaculty(long id) {
-        return studentRepository.findStudentById(id);
+    public StudentDtoOut delete(long id) {
+        Student student = Optional.ofNullable(studentRepository.findById(id))
+                .orElseThrow(() -> new StudentNotFoundException(id));
+        studentRepository.delete(student);
+        return studentMapper.toDto(student);
     }
 
-    public Collection<Student> findByAgeBetween(int min, int max) {
-        return studentRepository.findByAgeBetween(min, max);
+    public Collection<StudentDtoOut> getStudentsByAge(int age) {
+        return studentRepository.findByAge(age).stream()
+                .map(studentMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public Student updateStudent(Student student) {
-        return studentRepository.save(student);
-    }
-
-    public void deleteStudent(long id) {
-        studentRepository.deleteById(id);
+    public Collection<StudentDtoOut> findByAgeBetween(int from, int to) {
+        return studentRepository.findByAgeBetween(from, to).stream()
+                .map(studentMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
