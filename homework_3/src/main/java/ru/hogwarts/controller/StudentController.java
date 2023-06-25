@@ -1,54 +1,54 @@
 package ru.hogwarts.controller;
 
-import org.springframework.http.ResponseEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.hogwarts.model.Student;
+import ru.hogwarts.dto.in.StudentDtoIn;
+import ru.hogwarts.dto.out.FacultyDtoOut;
+import ru.hogwarts.dto.out.StudentDtoOut;
 import ru.hogwarts.service.StudentService;
 
 import java.util.Collection;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("student")
 public class StudentController {
     StudentService studentService;
 
-    public StudentController(StudentService studentService) {
-        this.studentService = studentService;
-    }
-
     @PostMapping
-    public Student createStudent(@RequestBody Student student) {
-        return studentService.createStudent(student);
+    public StudentDtoOut createStudent(@RequestBody StudentDtoIn studentDtoIn) {
+        return studentService.create(studentDtoIn);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Student> findStudent(@PathVariable Long id) {
-        Student student = studentService.findStudent(id);
-        if (student == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(student);
+    public StudentDtoOut findStudent(@PathVariable Long id) {
+        return studentService.find(id);
     }
 
     @GetMapping
-    public Collection<Student> getAllStudents() {
-        return studentService.getAllStudents();
+    public Collection<StudentDtoOut> findByAgeBetween(@RequestParam(required = false) Integer from,
+                                                      @RequestParam(required = false) Integer to,
+                                                      @RequestParam(required = false) Integer age) {
+        if (from != null && to != null) {
+            return studentService.findByAgeBetween(to, from);
+        } else if (age != null) {
+            return studentService.getStudentsByAge(age);
+        }
+        return studentService.getAll();
     }
 
-    @GetMapping("sort/{age}")
-    public Collection<Student> getStudentsByAge(@PathVariable long age) {
-        return studentService.getStudentsByAge(age);
+    @GetMapping("faculty/{id}")
+    public FacultyDtoOut findFacultyOfStudent(@PathVariable Long id) {
+        return studentService.findFacultyOfStudent(id);
     }
-
 
     @PutMapping
-    public Student updateStudent(@RequestBody Student student) {
-        return studentService.updateStudent(student);
+    public StudentDtoOut updateStudent(@RequestBody StudentDtoIn studentDtoIn) {
+        return studentService.update(studentDtoIn);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Student> deleteStudent(@PathVariable Long id) {
-        studentService.deleteStudent(id);
-        return ResponseEntity.ok().build();
+    public StudentDtoOut deleteStudent(@PathVariable Long id) {
+        return studentService.delete(id);
     }
 }
