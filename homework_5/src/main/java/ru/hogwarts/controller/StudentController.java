@@ -10,13 +10,16 @@ import java.util.Collection;
 @RequestMapping("student")
 public class StudentController {
     StudentService studentService;
+
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
+
     @PostMapping
     public Student createStudent(@RequestBody Student student) {
         return studentService.create(student);
     }
+
     @GetMapping("{id}")
     public ResponseEntity<Student> findStudent(@PathVariable Long id) {
         Student student = studentService.find(id);
@@ -47,6 +50,7 @@ public class StudentController {
     public Student updateStudent(@RequestBody Student student) {
         return studentService.update(student);
     }
+
     @DeleteMapping("{id}")
     public ResponseEntity<Student> deleteStudent(@PathVariable Long id) {
         studentService.delete(id);

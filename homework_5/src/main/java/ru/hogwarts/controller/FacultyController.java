@@ -11,13 +11,16 @@ import java.util.Collections;
 @RequestMapping("faculty")
 public class FacultyController {
     FacultyService facultyService;
+
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
     }
+
     @PostMapping
     public Faculty createFaculty(@RequestBody Faculty faculty) {
         return facultyService.create(faculty);
     }
+
     @GetMapping("{id}")
     public ResponseEntity<Faculty> findFaculty(@PathVariable Long id) {
         Faculty faculty = facultyService.find(id);
@@ -28,13 +31,13 @@ public class FacultyController {
     }
 
     @GetMapping
-    public Collection<Faculty> getFacultiesByColour(@RequestParam(required = false) String colour,
-                                                    @RequestParam(required = false) String name,
-                                                    @RequestParam(required = false) Long faculty_id) {
+    public Collection<Faculty> getFacultiesByColourOrName(@RequestParam(required = false) String colour,
+                                                          @RequestParam(required = false) String name,
+                                                          @RequestParam(required = false) Long faculty_id) {
         if (colour != null) {
-            return facultyService.getFacultiesByColour(colour);
+            return facultyService.getFacultiesByColourOrName(colour);
         } else if (name != null) {
-            return facultyService.getFacultiesByName(name);
+            return facultyService.getFacultiesByColourOrName(name);
         } else if (faculty_id != null) {
             return Collections.singleton(facultyService.getFacultiesByFaculty_IdOfStudent(faculty_id));
         }
@@ -45,6 +48,7 @@ public class FacultyController {
     public Faculty updateFaculty(@RequestBody Faculty faculty) {
         return facultyService.update(faculty);
     }
+
     @DeleteMapping("{id}")
     public ResponseEntity<Faculty> deleteFaculty(@PathVariable Long id) {
         facultyService.delete(id);
