@@ -4,7 +4,10 @@ import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.model.Avatar;
 import ru.hogwarts.service.AvatarService;
+
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/avatars")
@@ -31,5 +34,11 @@ public class AvatarController {
                 .contentType(MediaType.valueOf(pair.getSecond()))
                 .contentLength(data.length)
                 .body(data);
+    }
+
+    @GetMapping
+    public Collection<Avatar> getAvatarsByPages(@RequestParam Integer page,
+                                                @RequestParam Integer size) {
+        return avatarService.getAvatarsByPages(page, size);
     }
 }
