@@ -87,4 +87,18 @@ public class StudentService {
         studentDtoOut.setAvatarUri("http://localhost:8080/avatars/" + avatar.getId() + "/fs");
         return studentDtoOut;
     }
+
+    public Integer findTotalStudents() {
+        return studentRepository.findTotalStudents();
+    }
+
+    public Integer findAverageAgeOfStudents() {
+        return studentRepository.findAverageAgeOfStudents();
+    }
+
+    public Collection<StudentDtoOut> findLastFiveStudents() {
+        return studentRepository.findLastFiveStudents().stream()
+                .map(studentMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }
